@@ -3,14 +3,13 @@
   "minVersion": "0.8",
   "package": "com.dimaskama.orthocamera.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "sodium.OptionBuilderAccessor",
-    "sodium.SodiumGameOptionsPagesMixin"
-  ],
   "client": [
     "CameraMixin",
     "GameRendererMixin",
-    "sodium.MinecraftClientMixin"
+    "sodium.MinecraftClientMixin",
+    "sodium.OptionBuilderAccessor",
+    "sodium.SodiumGameOptionsMixin",
+    "sodium.SodiumGameOptionsPagesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

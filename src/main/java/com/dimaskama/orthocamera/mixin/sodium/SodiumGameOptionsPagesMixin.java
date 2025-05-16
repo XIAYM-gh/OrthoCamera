@@ -1,6 +1,7 @@
 package com.dimaskama.orthocamera.mixin.sodium;
 
 import com.dimaskama.orthocamera.client.OrthoCamera;
+import com.dimaskama.orthocamera.client.config.ModConfig;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.caffeinemc.mods.sodium.client.gui.SodiumGameOptionPages;
@@ -25,8 +26,8 @@ public class SodiumGameOptionsPagesMixin {
             instance.setEnabled(() -> CLIENT.world == null || !OrthoCamera.CONFIG.enabled)
                     .setBinding((SodiumGameOptions opt, Boolean value) -> {
                         opt.performance.useBlockFaceCulling = value;
-                        OrthoCamera.CONFIG.useBlockFaceCulling = value;
-                    }, (SodiumGameOptions opts) -> OrthoCamera.CONFIG.useBlockFaceCulling);
+                        ModConfig.originalUseBlockFaceCulling = value;
+                    }, (SodiumGameOptions opts) -> ModConfig.originalUseBlockFaceCulling);
         }
 
         return instance.build();

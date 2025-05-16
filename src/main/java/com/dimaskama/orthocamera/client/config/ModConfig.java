@@ -1,6 +1,5 @@
 package com.dimaskama.orthocamera.client.config;
 
-import com.dimaskama.orthocamera.client.OrthoCamera;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
 import net.caffeinemc.mods.sodium.client.gui.SodiumGameOptions;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +11,7 @@ public class ModConfig extends JsonConfig {
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     public static final float MIN_SCALE = 0.01F;
     public static final float MAX_SCALE = 10000.0F;
+    public static boolean originalUseBlockFaceCulling;
     public boolean enabled = false;
     public boolean save_enabled_state;
     public float scale_x = 3.0F;
@@ -24,7 +24,6 @@ public class ModConfig extends JsonConfig {
     public float fixed_rotate_speed_y = 3.0F;
     public float fixed_rotate_speed_x = 3.0F;
     public boolean auto_third_person = true;
-    public transient boolean useBlockFaceCulling = true;
     private transient boolean dirty;
     private transient float prevScaleX;
     private transient float prevScaleY;
@@ -135,7 +134,7 @@ public class ModConfig extends JsonConfig {
         SodiumGameOptions.PerformanceSettings performanceSettings = SodiumClientMod.options().performance;
 
         if (CLIENT.world == null || !enabled) {
-            performanceSettings.useBlockFaceCulling = useBlockFaceCulling;
+            performanceSettings.useBlockFaceCulling = originalUseBlockFaceCulling;
         } else {
             performanceSettings.useBlockFaceCulling = false;
         }
