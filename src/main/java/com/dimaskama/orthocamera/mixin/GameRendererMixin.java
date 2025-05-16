@@ -54,7 +54,8 @@ abstract class GameRendererMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/joml/Quaternionf;conjugate(Lorg/joml/Quaternionf;)Lorg/joml/Quaternionf;"
-            )
+            ),
+            remap = false
     )
     private Quaternionf modifyRotation(Quaternionf original, @Local(argsOnly = true) RenderTickCounter tickCounter) {
         if (OrthoCamera.isEnabled() && OrthoCamera.CONFIG.fixed) {

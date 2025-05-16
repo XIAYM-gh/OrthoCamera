@@ -36,6 +36,9 @@ Fixed camera demonstration:
 ![fix_preview](preview/fix_preview.gif)
 
 ## Compatibility
-- Using **Sodium** mod, you have to disable "Use Block Face Culling" in "Performance" tab. Otherwise, some block faces will not render with big scale
+<!--- Using **Sodium** mod, you have to disable "Use Block Face Culling" in "Performance" tab. Otherwise, some block faces will not render with big scale
 - However, **Nvidium** mod force enables this sodium feature. So you have to **disable Nvidium** mod, if you have it. 
 - After disabling, you probably need to press **F3 + T** to apply change
+-->
+
+This modified version is not tested with Nvidium or other similar mods, use with caution,
