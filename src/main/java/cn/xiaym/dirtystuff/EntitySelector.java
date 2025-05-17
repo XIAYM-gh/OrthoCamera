@@ -53,7 +53,7 @@ public class EntitySelector {
             }
 
             double dist = livingEntity.getPos().distanceTo(playerPos);
-            if (dist > 50) {
+            if (dist > 100) {
                 continue;
             }
 
