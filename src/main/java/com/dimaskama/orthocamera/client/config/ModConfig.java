@@ -26,6 +26,8 @@ public class ModConfig extends JsonConfig {
     public float fixed_rotate_speed_y = 3.0F;
     public float fixed_rotate_speed_x = 3.0F;
     public boolean auto_third_person = true;
+    public boolean auto_select_entity = true;
+    public float max_select_distance = 7.5F;
     private transient boolean dirty;
     private transient float prevScaleX;
     private transient float prevScaleY;

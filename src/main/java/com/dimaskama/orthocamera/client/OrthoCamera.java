@@ -1,5 +1,6 @@
 package com.dimaskama.orthocamera.client;
 
+import cn.xiaym.dirtystuff.EntitySelector;
 import com.dimaskama.orthocamera.client.config.ModConfig;
 import com.dimaskama.orthocamera.client.config.ModConfigScreen;
 import net.fabricmc.api.ClientModInitializer;
@@ -29,10 +30,17 @@ public class OrthoCamera implements ClientModInitializer {
     private static final KeyBinding FIXED_CAMERA_ROTATE_DOWN_KEY = createKeybinding("fixed_camera_rotate_down", -1);
     private static final KeyBinding FIXED_CAMERA_ROTATE_LEFT_KEY = createKeybinding("fixed_camera_rotate_left", -1);
     private static final KeyBinding FIXED_CAMERA_ROTATE_RIGHT_KEY = createKeybinding("fixed_camera_rotate_right", -1);
+    private static final KeyBinding SELECT_NEAREST_ENTITY_KEY = createKeybinding("select_nearest_entity", GLFW.GLFW_KEY_DOWN);
+    private static final KeyBinding SELECT_NEXT_ENTITY_KEY = createKeybinding("select_next_entity", GLFW.GLFW_KEY_RIGHT);
+    private static final KeyBinding SELECT_ENTITY_AUTO_KEY = createKeybinding("select_entity_auto", GLFW.GLFW_KEY_UP);
+    private static final KeyBinding SELECT_ENTITY_STOP_KEY = createKeybinding("select_entity_stop", GLFW.GLFW_KEY_LEFT);
     private static final Text ENABLED_TEXT = Text.translatable("orthocamera.enabled");
     private static final Text DISABLED_TEXT = Text.translatable("orthocamera.disabled");
     private static final Text FIXED_TEXT = Text.translatable("orthocamera.fixed");
     private static final Text UNFIXED_TEXT = Text.translatable("orthocamera.unfixed");
+    private static final Text AUTO_SELECT_ENABLED_TEXT = Text.translatable("orthocamera.auto_select_enabled");
+    private static final Text AUTO_SELECT_DISABLED_TEXT = Text.translatable("orthocamera.auto_select_disabled");
+    private static final Text SELECT_STOPPED = Text.translatable("orthocamera.selecting_stopped");
     private static final float SCALE_MUL_INTERVAL = 1.1F;
 
     public static boolean isEnabled() {
@@ -71,6 +79,7 @@ public class OrthoCamera implements ClientModInitializer {
     public void onInitializeClient() {
         CONFIG.loadOrCreate();
         CONFIG.enabled &= CONFIG.save_enabled_state;
+
         KeyBindingHelper.registerKeyBinding(TOGGLE_KEY);
         KeyBindingHelper.registerKeyBinding(SCALE_INCREASE_KEY);
         KeyBindingHelper.registerKeyBinding(SCALE_DECREASE_KEY);
@@ -80,17 +89,20 @@ public class OrthoCamera implements ClientModInitializer {
         KeyBindingHelper.registerKeyBinding(FIXED_CAMERA_ROTATE_DOWN_KEY);
         KeyBindingHelper.registerKeyBinding(FIXED_CAMERA_ROTATE_LEFT_KEY);
         KeyBindingHelper.registerKeyBinding(FIXED_CAMERA_ROTATE_RIGHT_KEY);
+        KeyBindingHelper.registerKeyBinding(SELECT_NEAREST_ENTITY_KEY);
+        KeyBindingHelper.registerKeyBinding(SELECT_NEXT_ENTITY_KEY);
+        KeyBindingHelper.registerKeyBinding(SELECT_ENTITY_AUTO_KEY);
+        KeyBindingHelper.registerKeyBinding(SELECT_ENTITY_STOP_KEY);
+
         ClientTickEvents.START_CLIENT_TICK.register(c -> CONFIG.tick());
-        ClientTickEvents.END_CLIENT_TICK.register(this::handleInput);
+        ClientTickEvents.END_CLIENT_TICK.register(this::onEndClientTick);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this::onClientStopping);
     }
 
-    private void handleInput(MinecraftClient client) {
-        boolean messageSent = false;
+    private void onEndClientTick(MinecraftClient client) {
         while (TOGGLE_KEY.wasPressed()) {
             CONFIG.toggle();
             client.getMessageHandler().onGameMessage(CONFIG.enabled ? ENABLED_TEXT : DISABLED_TEXT, true);
-            messageSent = true;
         }
 
         boolean on = CONFIG.enabled;
@@ -107,16 +119,15 @@ public class OrthoCamera implements ClientModInitializer {
                 scaleChanged = true;
             }
         }
-        if (scaleChanged && !messageSent) {
+        if (scaleChanged) {
             sendScaleMessage();
-            messageSent = true;
         }
         boolean fixPressed = false;
         while (FIX_CAMERA_KEY.wasPressed()) {
             fixPressed = true;
             CONFIG.setFixed(!CONFIG.fixed);
         }
-        if (!messageSent && fixPressed) {
+        if (fixPressed) {
             client.getMessageHandler().onGameMessage(CONFIG.fixed ? FIXED_TEXT : UNFIXED_TEXT, true);
         }
         if (FIXED_CAMERA_ROTATE_LEFT_KEY.isPressed()) {
@@ -137,6 +148,37 @@ public class OrthoCamera implements ClientModInitializer {
         }
         if (openScreen) {
             client.setScreen(new ModConfigScreen(null));
+        }
+
+        if (SELECT_ENTITY_AUTO_KEY.wasPressed()) {
+            CONFIG.auto_select_entity = !CONFIG.auto_select_entity;
+            client.getMessageHandler()
+                    .onGameMessage(CONFIG.auto_select_entity ? AUTO_SELECT_ENABLED_TEXT : AUTO_SELECT_DISABLED_TEXT, true);
+        }
+
+        if (EntitySelector.instance != null) {
+            boolean selected = false;
+            if (SELECT_NEAREST_ENTITY_KEY.wasPressed()) {
+                EntitySelector.instance.selectNearest();
+                selected = true;
+            }
+
+            if (SELECT_NEXT_ENTITY_KEY.wasPressed()) {
+                EntitySelector.instance.selectNext();
+                selected = true;
+            }
+
+            if (selected && EntitySelector.instance.selectedEntity != null) {
+                client.getMessageHandler()
+                        .onGameMessage(Text.translatable("orthocamera.selecting_entity", EntitySelector.instance.selectedEntity.getDisplayName()), true);
+            }
+
+            if (SELECT_ENTITY_STOP_KEY.wasPressed()) {
+                EntitySelector.instance.selectedEntity = null;
+                client.getMessageHandler().onGameMessage(SELECT_STOPPED, true);
+            }
+
+            EntitySelector.instance.tick();
         }
     }
 

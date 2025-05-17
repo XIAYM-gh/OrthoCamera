@@ -27,7 +27,8 @@
   "mixins": [
     "orthocamera.mixins.json",
     "orthocamera.sodium.mixins.json",
-    "orthocamera.entityculling.mixins.json"
+    "orthocamera.entityculling.mixins.json",
+    "orthocamera.dirtystuff.mixins.json"
   ],
   "depends": {
     "fabric-api": "*",
