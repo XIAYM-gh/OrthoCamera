@@ -35,6 +35,38 @@ public class OrthoCamera implements ClientModInitializer {
     private static final Text UNFIXED_TEXT = Text.translatable("orthocamera.unfixed");
     private static final float SCALE_MUL_INTERVAL = 1.1F;
 
+    public static boolean isEnabled() {
+        return CONFIG.enabled && CLIENT.world != null;
+    }
+
+    public static Matrix4f createOrthoMatrix(float delta, float minScale) {
+        float width = Math.max(minScale, CONFIG.getScaleX(delta) * CLIENT.getWindow()
+                .getFramebufferWidth() / CLIENT.getWindow().getFramebufferHeight());
+        float height = Math.max(minScale, CONFIG.getScaleY(delta));
+        return new Matrix4f().setOrtho(-width, width, -height, height, CONFIG.min_distance, CONFIG.max_distance);
+    }
+
+    private static KeyBinding createKeybinding(String name, int key) {
+        return new KeyBinding("orthocamera.key." + name, InputUtil.Type.KEYSYM, key, MOD_ID);
+    }
+
+    public static void sendScaleMessage() {
+        CLIENT.getMessageHandler()
+                .onGameMessage(Text.translatable("orthocamera.scale", String.format("%.1f", CONFIG.scale_x), String.format("%.1f", CONFIG.scale_y)), true);
+    }
+
+    public static void increaseScale() {
+        CONFIG.setScaleX(CONFIG.scale_x * SCALE_MUL_INTERVAL);
+        CONFIG.setScaleY(CONFIG.scale_y * SCALE_MUL_INTERVAL);
+        CONFIG.setDirty(true);
+    }
+
+    public static void decreaseScale() {
+        CONFIG.setScaleX(CONFIG.scale_x / SCALE_MUL_INTERVAL);
+        CONFIG.setScaleY(CONFIG.scale_y / SCALE_MUL_INTERVAL);
+        CONFIG.setDirty(true);
+    }
+
     @Override
     public void onInitializeClient() {
         CONFIG.loadOrCreate();
@@ -57,38 +89,26 @@ public class OrthoCamera implements ClientModInitializer {
         boolean messageSent = false;
         while (TOGGLE_KEY.wasPressed()) {
             CONFIG.toggle();
-            client.getMessageHandler().onGameMessage(
-                    CONFIG.enabled ? ENABLED_TEXT : DISABLED_TEXT,
-                    true
-            );
+            client.getMessageHandler().onGameMessage(CONFIG.enabled ? ENABLED_TEXT : DISABLED_TEXT, true);
             messageSent = true;
         }
+
         boolean on = CONFIG.enabled;
         boolean scaleChanged = false;
         while (SCALE_INCREASE_KEY.wasPressed()) {
             if (on) {
-                CONFIG.setScaleX(CONFIG.scale_x * SCALE_MUL_INTERVAL);
-                CONFIG.setScaleY(CONFIG.scale_y * SCALE_MUL_INTERVAL);
-                CONFIG.setDirty(true);
+                increaseScale();
                 scaleChanged = true;
             }
         }
         while (SCALE_DECREASE_KEY.wasPressed()) {
             if (on) {
-                CONFIG.setScaleX(CONFIG.scale_x / SCALE_MUL_INTERVAL);
-                CONFIG.setScaleY(CONFIG.scale_y / SCALE_MUL_INTERVAL);
-                CONFIG.setDirty(true);
+                decreaseScale();
                 scaleChanged = true;
             }
         }
         if (scaleChanged && !messageSent) {
-            client.getMessageHandler().onGameMessage(
-                    Text.translatable(
-                            "orthocamera.scale",
-                            String.format("%.1f", CONFIG.scale_x), String.format("%.1f", CONFIG.scale_y)
-                    ),
-                    true
-            );
+            sendScaleMessage();
             messageSent = true;
         }
         boolean fixPressed = false;
@@ -124,29 +144,5 @@ public class OrthoCamera implements ClientModInitializer {
         if (CONFIG.isDirty()) {
             CONFIG.save();
         }
-    }
-
-    public static boolean isEnabled() {
-        return CONFIG.enabled && CLIENT.world != null;
-    }
-
-    public static Matrix4f createOrthoMatrix(float delta, float minScale) {
-        float width = Math.max(minScale, CONFIG.getScaleX(delta)
-                * CLIENT.getWindow().getFramebufferWidth() / CLIENT.getWindow().getFramebufferHeight());
-        float height = Math.max(minScale, CONFIG.getScaleY(delta));
-        return new Matrix4f().setOrtho(
-                -width, width,
-                -height, height,
-                CONFIG.min_distance, CONFIG.max_distance
-        );
-    }
-
-    private static KeyBinding createKeybinding(String name, int key) {
-        return new KeyBinding(
-                "orthocamera.key." + name,
-                InputUtil.Type.KEYSYM,
-                key,
-                MOD_ID
-        );
     }
 }

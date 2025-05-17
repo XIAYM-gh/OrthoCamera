@@ -5,10 +5,11 @@
   "name": "OrthoCamera",
   "description": "Toggleable orthographic view",
   "authors": [
-    "DimasKama"
+    "DimasKama",
+    "XIAYM-gh"
   ],
   "contact": {
-    "sources": "https://github.com/DimasKama/OrthoCamera"
+    "sources": "https://github.com/XIAYM-gh/OrthoCamera"
   },
   "license": [
     "MIT"
