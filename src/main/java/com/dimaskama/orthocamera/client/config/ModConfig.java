@@ -1,17 +1,20 @@
 package com.dimaskama.orthocamera.client.config;
 
+import com.dimaskama.orthocamera.client.OrthoCamera;
+import dev.tr7zw.entityculling.EntityCullingModBase;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
 import net.caffeinemc.mods.sodium.client.gui.SodiumGameOptions;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
 public class ModConfig extends JsonConfig {
-    public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     public static final float MIN_SCALE = 0.01F;
     public static final float MAX_SCALE = 10000.0F;
     public static boolean originalUseBlockFaceCulling;
+    public static boolean originalEntityCullingState = true;
     public boolean enabled = false;
     public boolean save_enabled_state;
     public float scale_x = 3.0F;
@@ -118,29 +121,41 @@ public class ModConfig extends JsonConfig {
     public void toggle() {
         enabled = !enabled;
         updateSodiumSettings();
+        updateEntityCullingSettings();
 
         if (auto_third_person) {
             if (enabled) {
-                prevPerspective = CLIENT.options.getPerspective();
-                CLIENT.options.setPerspective(Perspective.THIRD_PERSON_BACK);
+                prevPerspective = OrthoCamera.CLIENT.options.getPerspective();
+                OrthoCamera.CLIENT.options.setPerspective(Perspective.THIRD_PERSON_BACK);
             } else if (prevPerspective != null) {
-                CLIENT.options.setPerspective(prevPerspective);
+                OrthoCamera.CLIENT.options.setPerspective(prevPerspective);
             }
         }
         setDirty(true);
     }
 
     public void updateSodiumSettings() {
+        if (!FabricLoader.getInstance().isModLoaded("sodium")) {
+            return;
+        }
+
         SodiumGameOptions.PerformanceSettings performanceSettings = SodiumClientMod.options().performance;
-
-        if (CLIENT.world == null || !enabled) {
-            performanceSettings.useBlockFaceCulling = originalUseBlockFaceCulling;
-        } else {
+        if (OrthoCamera.isEnabled()) {
             performanceSettings.useBlockFaceCulling = false;
+        } else {
+            performanceSettings.useBlockFaceCulling = originalUseBlockFaceCulling;
         }
 
-        if (CLIENT.world != null) {
-            CLIENT.worldRenderer.reload();
+        if (OrthoCamera.CLIENT.world != null) {
+            OrthoCamera.CLIENT.worldRenderer.reload();
         }
+    }
+
+    public void updateEntityCullingSettings() {
+        if (!FabricLoader.getInstance().isModLoaded("entityculling")) {
+            return;
+        }
+
+        EntityCullingModBase.enabled = !OrthoCamera.isEnabled() && originalEntityCullingState;
     }
 }

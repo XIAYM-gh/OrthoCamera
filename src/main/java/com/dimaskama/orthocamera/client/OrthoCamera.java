@@ -16,6 +16,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 public class OrthoCamera implements ClientModInitializer {
+    public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     public static final String MOD_ID = "orthocamera";
     public static final Logger LOGGER = LogManager.getLogger("OrthoCamera");
     public static final ModConfig CONFIG = new ModConfig("config/orthocamera.json", "assets/orthocamera/default_config.json");
@@ -126,13 +127,12 @@ public class OrthoCamera implements ClientModInitializer {
     }
 
     public static boolean isEnabled() {
-        return CONFIG.enabled;
+        return CONFIG.enabled && CLIENT.world != null;
     }
 
     public static Matrix4f createOrthoMatrix(float delta, float minScale) {
-        MinecraftClient client = MinecraftClient.getInstance();
         float width = Math.max(minScale, CONFIG.getScaleX(delta)
-                * client.getWindow().getFramebufferWidth() / client.getWindow().getFramebufferHeight());
+                * CLIENT.getWindow().getFramebufferWidth() / CLIENT.getWindow().getFramebufferHeight());
         float height = Math.max(minScale, CONFIG.getScaleY(delta));
         return new Matrix4f().setOrtho(
                 -width, width,

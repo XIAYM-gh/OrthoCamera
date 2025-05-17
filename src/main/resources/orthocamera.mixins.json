@@ -5,11 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "CameraMixin",
-    "GameRendererMixin",
-    "sodium.MinecraftClientMixin",
-    "sodium.OptionBuilderAccessor",
-    "sodium.SodiumGameOptionsMixin",
-    "sodium.SodiumGameOptionsPagesMixin"
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

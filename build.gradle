@@ -33,6 +33,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
+    modImplementation "maven.modrinth:entityculling:${project.entity_culling_version}"
 }
 
 processResources {
@@ -69,7 +70,7 @@ jar {
     }
 }
 
-def modrinthToken = properties.get("modrinth_forminotaur_token")
+String modrinthToken = properties.get("modrinth_forminotaur_token")
 if (modrinthToken) {
     modrinth {
         token = modrinthToken
