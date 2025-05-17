@@ -24,7 +24,7 @@ public class EntityCullingModBaseMixin {
         EntityCullingModBase.enabled = enabled;
     }
 
-    @WrapOperation(method = "clientTick", at = @At(value = "INVOKE", target = "Ldev/tr7zw/entityculling/util/NMSHelper;sendChatMessage(Lnet/minecraft/text/Text;)V"), remap = false)
+    @WrapOperation(method = "clientTick", at = @At(value = "INVOKE", target = "Ldev/tr7zw/entityculling/util/NMSHelper;sendChatMessage(Lnet/minecraft/text/Text;)V"))
     private void entityCullingSendChatMessage(Text message, Operation<Void> original) {
         if (OrthoCamera.isEnabled() && message.getContent() instanceof PlainTextContent.Literal(
                 String string
