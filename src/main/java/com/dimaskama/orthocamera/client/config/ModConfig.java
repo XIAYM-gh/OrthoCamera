@@ -3,7 +3,6 @@ package com.dimaskama.orthocamera.client.config;
 import com.dimaskama.orthocamera.client.OrthoCamera;
 import dev.tr7zw.entityculling.EntityCullingModBase;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
-import net.caffeinemc.mods.sodium.client.gui.SodiumGameOptions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
@@ -139,13 +138,7 @@ public class ModConfig extends JsonConfig {
             return;
         }
 
-        SodiumGameOptions.PerformanceSettings performanceSettings = SodiumClientMod.options().performance;
-        if (OrthoCamera.isEnabled()) {
-            performanceSettings.useBlockFaceCulling = false;
-        } else {
-            performanceSettings.useBlockFaceCulling = originalUseBlockFaceCulling;
-        }
-
+        SodiumClientMod.options().performance.useBlockFaceCulling = !OrthoCamera.isEnabled() && originalUseBlockFaceCulling;
         if (OrthoCamera.CLIENT.world != null) {
             OrthoCamera.CLIENT.worldRenderer.reload();
         }

@@ -19,10 +19,10 @@ public class SodiumGameOptionsPagesMixin {
                 .getContent() instanceof TranslatableTextContent content && content.getKey()
                 .equals("sodium.options.use_block_face_culling.name")) {
             instance.setEnabled(() -> !OrthoCamera.isEnabled())
-                    .setBinding((SodiumGameOptions opt, Boolean value) -> {
+                    .setBinding((opt, value) -> {
                         opt.performance.useBlockFaceCulling = value;
                         ModConfig.originalUseBlockFaceCulling = value;
-                    }, (SodiumGameOptions opts) -> ModConfig.originalUseBlockFaceCulling);
+                    }, opt -> ModConfig.originalUseBlockFaceCulling);
         }
 
         return instance.build();

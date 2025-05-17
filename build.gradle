@@ -45,6 +45,10 @@ processResources {
     }
 }
 
+base {
+    archivesName = project.archives_base_name
+}
+
 def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
 
@@ -59,7 +63,6 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    archivesBaseName = project.archives_base_name
 
     withSourcesJar()
 }
