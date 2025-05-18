@@ -50,4 +50,4 @@ Fixed camera demonstration:
 - After disabling, you probably need to press **F3 + T** to apply change
 -->
 
-This modified version is not tested with Nvidium or other similar mods, use with caution.
+This modified version is not tested with Nvidium or other similar mods, and may be incompatible, so use with caution.

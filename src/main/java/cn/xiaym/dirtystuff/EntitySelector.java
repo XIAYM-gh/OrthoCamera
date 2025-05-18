@@ -18,6 +18,10 @@ public class EntitySelector {
     public List<LivingEntity> entityList;
     private int index = 0;
 
+    public static boolean featureAvailable() {
+        return OrthoCamera.isEnabled() && OrthoCamera.CONFIG.fixed;
+    }
+
     public void tick() {
         if (selectedEntity == null || OrthoCamera.CLIENT.player == null) {
             return;
@@ -29,12 +33,16 @@ public class EntitySelector {
             return;
         }
 
-        if (OrthoCamera.isEnabled() && OrthoCamera.CONFIG.fixed) {
+        if (featureAvailable()) {
             lookAt();
         }
     }
 
     public void updateEntityList() {
+        if (!featureAvailable()) {
+            return;
+        }
+
         assert OrthoCamera.CLIENT.player != null;
         assert OrthoCamera.CLIENT.world != null;
 
@@ -67,19 +75,29 @@ public class EntitySelector {
     }
 
     public void selectNearest() {
+        if (!featureAvailable()) {
+            return;
+        }
+
         updateEntityList();
         selectedEntity = entityList.isEmpty() ? null : entityList.getFirst();
     }
 
     public void selectNext() {
+        if (!featureAvailable()) {
+            return;
+        }
+
         if (entityList == null || entityList.size() < index + 1) {
             selectNearest();
             return;
         }
 
+        assert OrthoCamera.CLIENT.player != null;
+        Vec3d playerPos = OrthoCamera.CLIENT.player.getPos();
         for (int i = ++index, size = entityList.size(); i < size; i++, index++) {
             LivingEntity entity = entityList.get(i);
-            if (entity.isAlive()) {
+            if (entity.isAlive() && entity.getPos().distanceTo(playerPos) <= OrthoCamera.CONFIG.max_select_distance) {
                 selectedEntity = entity;
                 return;
             }
