@@ -15,7 +15,7 @@ import java.util.List;
 public class EntitySelector {
     public static EntitySelector instance;
     public LivingEntity selectedEntity;
-    private List<LivingEntity> entityList;
+    public List<LivingEntity> entityList;
     private int index = 0;
 
     public void tick() {
@@ -23,7 +23,7 @@ public class EntitySelector {
             return;
         }
 
-        if (!OrthoCamera.isEnabled() || selectedEntity.isDead() || selectedEntity.isRemoved() || selectedEntity.getPos()
+        if (!OrthoCamera.isEnabled() || !selectedEntity.isAlive() || selectedEntity.getPos()
                 .distanceTo(OrthoCamera.CLIENT.player.getPos()) > OrthoCamera.CONFIG.max_select_distance) {
             selectedEntity = null;
             return;
@@ -53,7 +53,7 @@ public class EntitySelector {
             }
 
             double dist = livingEntity.getPos().distanceTo(playerPos);
-            if (dist > 100) {
+            if (dist > OrthoCamera.CONFIG.max_select_distance) {
                 continue;
             }
 
@@ -67,24 +67,25 @@ public class EntitySelector {
     }
 
     public void selectNearest() {
-        if (entityList == null || entityList.isEmpty()) {
-            updateEntityList();
-        }
-
-        selectedEntity = entityList.getFirst();
+        updateEntityList();
+        selectedEntity = entityList.isEmpty() ? null : entityList.getFirst();
     }
 
     public void selectNext() {
-        if (entityList == null) {
-            updateEntityList();
-        }
-
-        if (entityList.size() < index + 1) {
+        if (entityList == null || entityList.size() < index + 1) {
             selectNearest();
             return;
         }
 
-        selectedEntity = entityList.get(index++);
+        for (int i = ++index, size = entityList.size(); i < size; i++, index++) {
+            LivingEntity entity = entityList.get(i);
+            if (entity.isAlive()) {
+                selectedEntity = entity;
+                return;
+            }
+        }
+
+        selectNearest();
     }
 
     public void lookAt() {

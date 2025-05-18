@@ -3,8 +3,17 @@ Minecraft Fabric client-side mod. Adds Toggleable & configurable orthographic vi
 
 ![preview](preview/preview.gif)
 
-## Download
-Releases can be found on [ModRinth](https://modrinth.com/mod/orthocamera/versions)
+## Modifications
+Here's a list of modifications:
+ - Adds Chinese (Simplified) translation
+ - Improves compatibility with Sodium and Entity Culling
+ - Allows changing the scale using mouse wheel (with Left Alt held)
+ - Allows moving the fixed prospective directly using mouse (with Left Alt held)
+ - Adds an entity selection feature, which can only be used in fixed prospective
+    - UP Key: Toggle auto selection (after manually hitting an entity)
+    - DOWN Key: Select nearest entity (and refreshes the selection list)
+    - RIGHT Key: Select next entity in the selection list
+    - LEFT Key: Stop selection
 
 ## What is this
 In the perspective view (the default), objects which are far away are smaller than those nearby. In the orthographic view, all objects appear at the same scale.
@@ -41,4 +50,4 @@ Fixed camera demonstration:
 - After disabling, you probably need to press **F3 + T** to apply change
 -->
 
-This modified version is not tested with Nvidium or other similar mods, use with caution,
+This modified version is not tested with Nvidium or other similar mods, use with caution.

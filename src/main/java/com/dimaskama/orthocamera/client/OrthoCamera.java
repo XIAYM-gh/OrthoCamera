@@ -175,6 +175,8 @@ public class OrthoCamera implements ClientModInitializer {
 
             if (SELECT_ENTITY_STOP_KEY.wasPressed()) {
                 EntitySelector.instance.selectedEntity = null;
+                EntitySelector.instance.entityList = null;
+
                 client.getMessageHandler().onGameMessage(SELECT_STOPPED, true);
             }
 
