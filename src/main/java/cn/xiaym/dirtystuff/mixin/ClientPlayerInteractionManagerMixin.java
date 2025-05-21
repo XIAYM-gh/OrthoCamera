@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ClientPlayerInteractionManagerMixin {
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;attack(Lnet/minecraft/entity/Entity;)V"))
     private void attackEntity(PlayerEntity player, Entity target, CallbackInfo ci) {
-        if (!OrthoCamera.CONFIG.auto_select_entity || EntitySelector.instance == null) {
+        if (!EntitySelector.featureAvailable() || EntitySelector.instance == null || !OrthoCamera.CONFIG.auto_select_entity) {
             return;
         }
 

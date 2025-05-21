@@ -33,7 +33,7 @@ public class EntitySelector {
             return;
         }
 
-        if (featureAvailable()) {
+        if (featureAvailable() && selectedEntity != null) {
             lookAt();
         }
     }

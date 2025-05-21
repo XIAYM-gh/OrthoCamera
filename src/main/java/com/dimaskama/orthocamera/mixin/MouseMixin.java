@@ -22,7 +22,7 @@ public class MouseMixin {
 
         if (vertical == 1) {
             OrthoCamera.decreaseScale();
-        } else {
+        } else if (vertical == -1) {
             OrthoCamera.increaseScale();
         }
 

@@ -1,7 +1,6 @@
 package cn.xiaym.dirtystuff.mixin;
 
 import cn.xiaym.dirtystuff.EntitySelector;
-import com.dimaskama.orthocamera.client.OrthoCamera;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.entity.LivingEntity;
@@ -16,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LivingEntityMixin {
     @Unique
     private boolean isSelected() {
-        return OrthoCamera.isEnabled() && OrthoCamera.CONFIG.fixed && (Object) this == EntitySelector.instance.selectedEntity;
+        return EntitySelector.featureAvailable() && (Object) this == EntitySelector.instance.selectedEntity;
     }
 
     @WrapMethod(method = "isGlowing")
