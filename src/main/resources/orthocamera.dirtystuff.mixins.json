@@ -1,13 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.dimaskama.orthocamera.mixin",
+  "package": "cn.xiaym.dirtystuff.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "CameraMixin",
-    "EntityMixin",
-    "GameRendererMixin",
-    "MouseMixin"
+    "ClientPlayerInteractionManagerMixin",
+    "LivingEntityMixin",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

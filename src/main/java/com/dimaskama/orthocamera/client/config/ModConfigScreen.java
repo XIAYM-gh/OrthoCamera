@@ -24,7 +24,7 @@ public class ModConfigScreen extends Screen {
         int optionWidth = 180;
         int leftX = ((width - 5) >>> 1) - optionWidth;
         int rightX = (width + 5) >>> 1;
-        int y = 40;
+        int y = 30;
         addDrawableChild(ButtonWidget.builder(Text.translatable("orthocamera.config.enabled", textOfBool(config.enabled)), button -> {
             config.toggle();
             button.setMessage(Text.translatable("orthocamera.config.enabled", textOfBool(config.enabled)));
@@ -96,6 +96,18 @@ public class ModConfigScreen extends Screen {
                 90.0F, 0.0F,
                 v -> config.fixed_rotate_speed_x = v
         ));
+        y += 25;
+        addDrawableChild(ButtonWidget.builder(Text.translatable("orthocamera.config.auto_select_entity", textOfBool(config.auto_select_entity)), button -> {
+            config.auto_select_entity = !config.auto_select_entity;
+            config.setDirty(true);
+            button.setMessage(Text.translatable("orthocamera.config.auto_select_entity", textOfBool(config.auto_select_entity)));
+        }).dimensions(leftX, y, optionWidth, 20).build());
+        addDrawableChild(new ConfigSliderWidget(
+                rightX, y,
+                "max_select_distance", config.max_select_distance,
+                100.0F, 0.0F,
+                v -> config.max_select_distance = v
+        ));
 
         addDrawableChild(ButtonWidget.builder(Text.translatable("orthocamera.reset_config"), button -> {
             config.reset();
@@ -127,7 +139,10 @@ public class ModConfigScreen extends Screen {
             config.save();
             config.setDirty(false);
         }
-        client.setScreen(parent);
+
+        if (client != null) {
+            client.setScreen(parent);
+        }
     }
 
     private class ConfigSliderWidget extends SliderWidget {

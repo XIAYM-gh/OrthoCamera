@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.dimaskama.orthocamera.mixin.entityculling",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "com.dimaskama.orthocamera.mixin.entityculling.EntityCullingMixinPlugin",
+  "client": [
+    "EntityCullingModBaseMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

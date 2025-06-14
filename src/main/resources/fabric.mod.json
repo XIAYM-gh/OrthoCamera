@@ -5,10 +5,11 @@
   "name": "OrthoCamera",
   "description": "Toggleable orthographic view",
   "authors": [
-    "DimasKama"
+    "DimasKama",
+    "XIAYM-gh"
   ],
   "contact": {
-    "sources": "https://github.com/DimasKama/OrthoCamera"
+    "sources": "https://github.com/XIAYM-gh/OrthoCamera"
   },
   "license": [
     "MIT"
@@ -24,11 +25,17 @@
     ]
   },
   "mixins": [
-    "orthocamera.mixins.json"
+    "orthocamera.mixins.json",
+    "orthocamera.sodium.mixins.json",
+    "orthocamera.entityculling.mixins.json",
+    "orthocamera.dirtystuff.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
-    "fabric": "*",
-    "minecraft": ">=${minecraft_version}"
+    "fabric-api": "*",
+    "minecraft": ["1.21", "1.21.1"]
+  },
+  "suggests": {
+    "sodium": ">=0.6.13+mc1.21.1",
+    "entityculling": ">=1.7.4"
   }
 }

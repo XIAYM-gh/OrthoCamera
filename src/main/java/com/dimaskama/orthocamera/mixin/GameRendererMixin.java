@@ -36,7 +36,6 @@ abstract class GameRendererMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/render/WorldRenderer;render(Lnet/minecraft/client/render/RenderTickCounter;ZLnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/GameRenderer;Lnet/minecraft/client/render/LightmapTextureManager;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V"
-
             ),
             index = 6
     )
@@ -54,7 +53,8 @@ abstract class GameRendererMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/joml/Quaternionf;conjugate(Lorg/joml/Quaternionf;)Lorg/joml/Quaternionf;"
-            )
+            ),
+            remap = false
     )
     private Quaternionf modifyRotation(Quaternionf original, @Local(argsOnly = true) RenderTickCounter tickCounter) {
         if (OrthoCamera.isEnabled() && OrthoCamera.CONFIG.fixed) {

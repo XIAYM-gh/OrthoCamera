@@ -1,6 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
-    id "com.modrinth.minotaur" version "2.+"
+    id 'fabric-loom' version '1.8-SNAPSHOT'
 }
 
 version = project.mod_version
@@ -9,6 +8,19 @@ group = project.maven_group
 repositories {
     maven {
         url "https://maven.terraformersmc.com/releases/"
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+
+        filter {
+            includeGroup "maven.modrinth"
+        }
     }
 }
 
@@ -19,19 +31,21 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modImplementation "maven.modrinth:sodium:${project.sodium_version}"
+    modImplementation "maven.modrinth:entityculling:${project.entity_culling_version}"
 }
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+        expand "version": project.version
     }
+}
+
+base {
+    archivesName = project.archives_base_name
 }
 
 def targetJavaVersion = 21
@@ -48,7 +62,6 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    archivesBaseName = project.archives_base_name
 
     withSourcesJar()
 }
@@ -56,22 +69,5 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
-    }
-}
-
-modrinth {
-    token = project.modrinth_forminotaur_token
-    projectId = "orthocamera"
-    versionNumber = project.mod_version
-    versionType = "release" // This is the default -- can also be `beta` or `alpha`
-    changelog = project.changelog
-    uploadFile = remapJar
-    gameVersions = ["1.21"] // Must be an array, even with only one version
-    dependencies { // A special DSL for creating dependencies
-        // scope.type
-        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
-        // The type can either be `project` or `version`
-        required.project "fabric-api"
-        optional.project "modmenu"
     }
 }

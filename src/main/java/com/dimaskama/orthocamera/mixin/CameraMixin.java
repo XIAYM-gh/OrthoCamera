@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(Camera.class)
 public abstract class CameraMixin {
-
     @ModifyVariable(method = "moveBy", at = @At("HEAD"), index = 1, argsOnly = true)
     private float moveByHeadX(float value) {
         return OrthoCamera.isEnabled() ? 0.0F : value;
