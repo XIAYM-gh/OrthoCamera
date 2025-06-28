@@ -35,7 +35,9 @@
     "minecraft": "1.21.4"
   },
   "suggests": {
-    "sodium": ">=0.6.13+mc1.21.4",
-    "entityculling": ">=1.7.4"
+    "sodium": ">=0.6.13+mc1.21.4"
+  },
+  "breaks": {
+    "entityculling": "<1.8.0"
   }
 }

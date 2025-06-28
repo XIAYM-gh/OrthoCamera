@@ -8,7 +8,11 @@ group = project.maven_group
 
 repositories {
     maven {
-        url "https://maven.terraformersmc.com/releases/"
+        url "https://maven.tr7zw.dev/repository/maven-public"
+    }
+
+    maven {
+        url "https://maven.terraformersmc.com/releases"
     }
 
     exclusiveContent {
@@ -33,7 +37,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
+
+    // I don't like this, FUCK 'EM!
     modImplementation "maven.modrinth:entityculling:${project.entity_culling_version}"
+    modImplementation "dev.tr7zw:TRansition:${rootProject.transition_version}-fabric-SNAPSHOT@jar"
 }
 
 processResources {
@@ -69,7 +76,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 
